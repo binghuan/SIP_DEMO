@@ -149,7 +149,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
                     errorCode: Int,
                     errorMessage: String
                 ) {
-                    updateStatus("Registration failed.  Please check settings.")
+                    updateStatus("Registration failed. Please check settings: $errorMessage")
                 }
             })
             Log.v(tag, "[[ END ]] Build SipProfile");

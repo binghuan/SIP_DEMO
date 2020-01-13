@@ -30,7 +30,7 @@ class SipSettings : PreferenceActivity() {
         // They're all in the XML file res/xml/preferences.xml.
         super.onCreate(savedInstanceState)
 
-        Log.v(tag, ">> onCreate");
+        Log.v(tag, ">> onCreate")
 
         addPreferencesFromResource(R.xml.preferences)
     }

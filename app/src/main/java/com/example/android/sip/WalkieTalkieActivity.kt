@@ -27,9 +27,8 @@ import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.EditText
-import android.widget.TextView
-import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import com.example.android.sip.databinding.WalkietalkieBinding
 import java.text.ParseException
 
 /**
@@ -40,20 +39,23 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     private val tag: String = "BH_WalkieTalkieActivity"// 20200112@BH_Lin
 
-    var sipAddress: String? = null
+    private var sipAddress: String? = null
     var manager: SipManager? = null
-    var me: SipProfile? = null
+    private var me: SipProfile? = null
     var call: SipAudioCall? = null
-    var callReceiver: IncomingCallReceiver? = null
+    private var callReceiver: IncomingCallReceiver? = null
+    private lateinit var binding: WalkietalkieBinding
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.v(tag, ">> onCreate");
+        Log.v(tag, ">> onCreate")
 
-        setContentView(R.layout.walkietalkie)
-        val pushToTalkButton =
-            findViewById<View>(R.id.pushToTalk) as ToggleButton
-        pushToTalkButton.setOnTouchListener(this)
+        binding = WalkietalkieBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
+
+        binding.pushToTalk.setOnTouchListener(this)
         // Set up the intent filter. This will be used to fire an
         // IncomingCallReceiver when someone calls the SIP address used by this
         // application.
@@ -69,7 +71,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     public override fun onStart() {
         super.onStart()
-        Log.v(tag, ">> onStart");
+        Log.v(tag, ">> onStart")
 
         // When we get back from the preference setting Activity, assume
         // settings have changed, and re-login with new auth info.
@@ -78,7 +80,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     public override fun onDestroy() {
         super.onDestroy()
-        Log.v(tag, ">> onDestroy");
+        Log.v(tag, ">> onDestroy")
 
         if (call != null) {
             call!!.close()
@@ -90,7 +92,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
     }
 
     private fun initializeManager() {
-        Log.v(tag, ">> initializeManager");
+        Log.v(tag, ">> initializeManager")
 
         if (manager == null) {
             manager = SipManager.newInstance(this)
@@ -104,7 +106,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
      */
     private fun initializeLocalProfile() {
 
-        Log.v(tag, "+++ initializeLocalProfile +++ ");
+        Log.v(tag, "+++ initializeLocalProfile +++ ")
 
         if (manager == null) {
             return
@@ -117,12 +119,12 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
         val username = prefs.getString("namePref", "")
         val domain = prefs.getString("domainPref", "")
         val password = prefs.getString("passPref", "")
-        if (username!!.length == 0 || domain!!.length == 0 || password!!.length == 0) {
+        if (username!!.isEmpty() || domain!!.isEmpty() || password!!.isEmpty()) {
             showDialog(UPDATE_SETTINGS_DIALOG)
             return
         }
         try {
-            Log.v(tag, "[[ START ]] Build SipProfile");
+            Log.v(tag, "[[ START ]] Build SipProfile")
             val builder = SipProfile.Builder(username, domain)
             builder.setPassword(password)
             me = builder.build()
@@ -132,7 +134,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
             manager!!.open(me, pi, null)
             // This listener must be added AFTER manager.open is called,
             // Otherwise the methods aren't guaranteed to fire.
-            manager!!.setRegistrationListener(me?.getUriString(), object : SipRegistrationListener {
+            manager!!.setRegistrationListener(me?.uriString, object : SipRegistrationListener {
                 override fun onRegistering(localProfileUri: String) {
                     updateStatus("Registering with SIP Server...")
                 }
@@ -152,14 +154,14 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
                     updateStatus("Registration failed. Please check settings: $errorMessage")
                 }
             })
-            Log.v(tag, "[[ END ]] Build SipProfile");
+            Log.v(tag, "[[ END ]] Build SipProfile")
         } catch (pe: ParseException) {
             updateStatus("Connection Error.")
         } catch (se: SipException) {
             updateStatus("Connection error.")
         }
 
-        Log.v(tag, "--- initializeLocalProfile ---");
+        Log.v(tag, "--- initializeLocalProfile ---")
     }
 
     /**
@@ -168,7 +170,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
      */
     private fun closeLocalProfile() {
 
-        Log.v(tag, "+++ closeLocalProfile +++");
+        Log.v(tag, "+++ closeLocalProfile +++")
 
         if (manager == null) {
             return
@@ -185,7 +187,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
             )
         }
 
-        Log.v(tag, "--- closeLocalProfile ---");
+        Log.v(tag, "--- closeLocalProfile ---")
     }
 
     /**
@@ -193,7 +195,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
      */
     private fun initiateCall() {
 
-        Log.v(tag, ">> initiateCall");
+        Log.v(tag, ">> initiateCall")
 
         updateStatus(sipAddress)
         try {
@@ -244,11 +246,10 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
      */
     fun updateStatus(status: String?) { // Be a good citizen. Make sure UI changes fire on the UI thread.
 
-        Log.v(tag, ">> updateStatus: $status");
+        Log.v(tag, ">> updateStatus: $status")
 
         runOnUiThread {
-            val labelView = findViewById<View>(R.id.sipLabel) as TextView
-            labelView.text = status
+            binding.sipLabel.text = status
         }
     }
 
@@ -277,7 +278,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
      */
     override fun onTouch(v: View, event: MotionEvent): Boolean {
 
-        Log.v(tag, ">> onTouch");
+        Log.v(tag, ">> onTouch")
 
         if (call == null) {
             return false
@@ -291,7 +292,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
 
-        Log.v(tag, ">> onCreateOptionsMenu");
+        Log.v(tag, ">> onCreateOptionsMenu")
 
         menu.add(0, CALL_ADDRESS, 0, "Call someone")
         menu.add(0, SET_AUTH_INFO, 0, "Edit your SIP Info.")
@@ -301,7 +302,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        Log.v(tag, ">> onOptionsItemSelected");
+        Log.v(tag, ">> onOptionsItemSelected")
 
         when (item.itemId) {
             CALL_ADDRESS -> showDialog(CALL_ADDRESS)
@@ -324,7 +325,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     override fun onCreateDialog(id: Int): Dialog? {
 
-        Log.v(tag, ">> onCreateDialog");
+        Log.v(tag, ">> onCreateDialog")
 
         when (id) {
             CALL_ADDRESS -> {
@@ -362,7 +363,7 @@ class WalkieTalkieActivity : AppCompatActivity(), OnTouchListener {
 
     private fun updatePreferences() {
 
-        Log.v(tag, ">> updatePreferences");
+        Log.v(tag, ">> updatePreferences")
 
         val settingsActivity = Intent(baseContext, SipSettings::class.java)
         startActivity(settingsActivity)

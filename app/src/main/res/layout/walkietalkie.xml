@@ -14,36 +14,39 @@
   limitations under the License.
  -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:id="@+id/mainlayout"
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_height="fill_parent">
 
-        <TextView
-            android:id="@+id/sipLabel"
+        <RelativeLayout
+            android:id="@+id/mainlayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
-        <ToggleButton
-            android:id="@+id/pushToTalk"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:layout_centerHorizontal="true"
+            <TextView
+                android:id="@+id/sipLabel"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_centerHorizontal="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            android:layout_centerVertical="true"
-            android:layout_marginTop="-20dp"
-            android:background="@drawable/btn_record"
-            android:text="@+string/talk"
-            android:textOff=""
-            android:textOn="" />
+            <ToggleButton
+                android:id="@+id/pushToTalk"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:layout_centerHorizontal="true"
 
-    </RelativeLayout>
-</FrameLayout>
+                android:layout_centerVertical="true"
+                android:layout_marginTop="-20dp"
+                android:background="@drawable/btn_record"
+                android:text="@+string/talk"
+                android:textOff=""
+                android:textOn="" />
+
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

@@ -28,7 +28,6 @@
     <EditTextPreference
         android:name="SIP Password"
         android:key="passPref"
-        android:password="true"
         android:summary="Password for your SIP Account"
         android:title="Enter Password" />
 </PreferenceScreen>

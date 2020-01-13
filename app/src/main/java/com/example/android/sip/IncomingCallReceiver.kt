@@ -37,7 +37,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
      */
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.v(tag, ">> onReceive");
+        Log.v(tag, ">> onReceive")
 
         var incomingCall: SipAudioCall? = null
         try {

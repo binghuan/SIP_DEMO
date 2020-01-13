@@ -1,5 +1,7 @@
 # SIP_DEMO
+![](icon.png)
 ![](images/Slide1.png)
+
 
 ## Demo
 
